@@ -7,17 +7,29 @@
     Shell.FlyoutBehavior="Disabled">
 
     <TabBar>
+        <!-- Pagina Home -->
         <ShellContent Title="Home"
                       ContentTemplate="{DataTemplate local:MainPage}" />
+
+        <!-- Pagina About -->
         <ShellContent Title="About"
                       ContentTemplate="{DataTemplate local:AboutPage}" />
-        <ShellContent
-            Title="Shopping Lists"
-            ContentTemplate="{DataTemplate local:ListEntryPage}" />
-        <ShellContent
-            Title="Recipes"
-            ContentTemplate="{DataTemplate local:RecipePage}" />
+
+        <!-- Pagina Shopping Lists -->
+        <ShellContent Title="Shopping Lists"
+                      ContentTemplate="{DataTemplate local:ListEntryPage}" />
+
+        <!-- Pagina Recipes -->
+        <Tab Title="Recipes"
+             Icon="recipes.png">
+            <ShellContent ContentTemplate="{DataTemplate local:RecipeListPage}" />
+        </Tab>
+
+        <!-- Noua pagină Ingredients -->
+        <Tab Title="Ingredients"
+             Icon="ingredients.png">
+            <ShellContent ContentTemplate="{DataTemplate local:IngredientPage}" />
+        </Tab>
 
     </TabBar>
-
 </Shell>

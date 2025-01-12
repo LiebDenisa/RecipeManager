@@ -47,11 +47,11 @@ namespace RecipeManager
 
             if (selectedIngredient != null)
             {
-                await Navigation.PopAsync(); // Închide IngredientPage și revine la RecipePage
-
                 MessagingCenter.Send(this, "AddIngredientToRecipe", selectedIngredient);
+                await Navigation.PopAsync();
             }
         }
+
 
     }
 }

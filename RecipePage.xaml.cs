@@ -4,17 +4,35 @@ namespace RecipeManager
 {
     public partial class RecipePage : ContentPage
     {
-        public RecipePage()
+        public RecipePage(Recipe recipe)
         {
             InitializeComponent();
-            BindingContext = new RecipeViewModel();
+            BindingContext = recipe ?? new Recipe { Ingredients = new List<RecipeIngredient>() };
+
             MessagingCenter.Subscribe<IngredientPage, Ingredient>(this, "AddIngredientToRecipe", (sender, ingredient) =>
             {
-                var viewModel = (RecipeViewModel)BindingContext;
-                viewModel.Ingredients.Add(ingredient);
-                ingredientListView.ItemsSource = null; // Resetează lista pentru a forța actualizarea
+                var viewModel = (Recipe)BindingContext;
+                viewModel.Ingredients ??= new List<RecipeIngredient>();
+
+                // Creează un nou obiect RecipeIngredient și îl adaugă la listă
+                var recipeIngredient = new RecipeIngredient
+                {
+                    IngredientID = ingredient.ID,
+                    Ingredient = ingredient
+                };
+
+                viewModel.Ingredients.Add(recipeIngredient);
+
+                // Actualizează lista de ingrediente
+                ingredientListView.ItemsSource = null;
                 ingredientListView.ItemsSource = viewModel.Ingredients;
             });
+
+
+        }
+
+        public RecipePage() : this(new Recipe())
+        {
         }
 
         // Navighează către IngredientPage pentru a adăuga un ingredient
@@ -26,19 +44,17 @@ namespace RecipeManager
         // Salvează rețeta în baza de date
         async void OnSaveRecipeClicked(object sender, EventArgs e)
         {
-            var recipeViewModel = (RecipeViewModel)BindingContext;
-
-            var recipe = new Recipe
-            {
-                Name = recipeViewModel.RecipeName,
-                Description = recipeViewModel.Description
-            };
+            var recipe = (Recipe)BindingContext;
 
             await App.Database.SaveRecipeAsync(recipe);
 
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                await App.Database.SaveRecipeIngredientAsync(ingredient);
+            }
+
             await DisplayAlert("Success", "Recipe saved successfully!", "OK");
 
-            // Blochează câmpurile pentru editare
             ingredientListView.IsEnabled = false;
             addIngredientButton.IsEnabled = false;
             recipeNameEditor.IsEnabled = false;

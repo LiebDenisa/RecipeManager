@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RecipeManager.RecipePage"
@@ -8,19 +7,20 @@
         <!-- Numele rețetei -->
         <Editor x:Name="recipeNameEditor"
                 Placeholder="Enter the recipe name"
-                Text="{Binding RecipeName}"
+                Text="{Binding Name}"
                 HeightRequest="50" />
 
         <!-- Lista de ingrediente -->
         <ListView x:Name="ingredientListView"
-                  ItemsSource="{Binding Ingredients}"
-                  Margin="0,20,0,0">
+          ItemsSource="{Binding Ingredients}"
+          Margin="0,20,0,0">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Name}" />
+                    <TextCell Text="{Binding Ingredient.Name}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
 
         <!-- Buton pentru navigare către IngredientPage -->
         <Button x:Name="addIngredientButton"

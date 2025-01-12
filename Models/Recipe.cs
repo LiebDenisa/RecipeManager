@@ -17,5 +17,12 @@ namespace RecipeManager.Models
         // Relația cu Ingredient
         [OneToMany(CascadeOperations = CascadeOperation.All)]
         public List<RecipeIngredient> Ingredients { get; set; }
+
+        // Constructor pentru inițializarea listei
+        public Recipe()
+        {
+            Ingredients = new List<RecipeIngredient>();
+        }
+
     }
 }

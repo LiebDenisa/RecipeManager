@@ -20,6 +20,10 @@ namespace RecipeManager.Data
             _database.CreateTableAsync<Recipe>().Wait();
             _database.CreateTableAsync<RecipeIngredient>().Wait();
         }
+        public Task<List<Recipe>> GetRecipesAsync()
+        {
+            return _database.Table<Recipe>().ToListAsync();
+        }
 
         // Metode pentru ShopList
         public Task<List<ShopList>> GetShopListsAsync()
@@ -90,15 +94,15 @@ namespace RecipeManager.Data
             }
         }
 
-        public Task<List<Ingredient>> GetIngredientsForRecipeAsync(int recipeID)
+        public Task<List<RecipeIngredient>> GetIngredientsForRecipeAsync(int recipeID)
         {
-            return _database.QueryAsync<Ingredient>(
-                "SELECT Ingredient.* FROM Ingredient " +
-                "INNER JOIN RecipeIngredient ON Ingredient.ID = RecipeIngredient.IngredientID " +
-                "WHERE RecipeIngredient.RecipeID = ?",
-                recipeID);
+            return _database.Table<RecipeIngredient>()
+                .Where(ri => ri.RecipeID == recipeID)
+                .ToListAsync();
         }
-            
+
+
+
 
 
     }
