@@ -9,10 +9,7 @@
                FontSize="24" 
                FontAttributes="Bold" 
                HorizontalOptions="Center" />
-        <Label Text="Version 1.0" 
-               FontSize="18" 
-               HorizontalOptions="Center" />
-        <Label Text="Developed by [Your Name]" 
+        <Label Text="Created by Denisa and Iustina" 
                FontSize="16" 
                HorizontalOptions="Center" />
     </VerticalStackLayout>
