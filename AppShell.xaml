@@ -13,7 +13,11 @@
                       ContentTemplate="{DataTemplate local:AboutPage}" />
         <ShellContent
             Title="Shopping Lists"
-            ContentTemplate="{DataTemplate local:ListEntryPage}" /> 
+            ContentTemplate="{DataTemplate local:ListEntryPage}" />
+        <ShellContent
+            Title="Recipes"
+            ContentTemplate="{DataTemplate local:RecipePage}" />
+
     </TabBar>
 
 </Shell>

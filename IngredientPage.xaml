@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeManager.IngredientPage"
+             Title="Ingredients">
+
+    <StackLayout Margin="20">
+        <Editor Placeholder="Enter ingredient name"
+                Text="{Binding Name}"
+                HeightRequest="50" />
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Buton pentru salvarea ingredientului -->
+            <Button Text="Save Ingredient"
+                    Clicked="OnSaveIngredientClicked" />
+
+            <!-- Buton pentru ștergerea ingredientului -->
+            <Button Grid.Column="1" Text="Delete Ingredient"
+                    Clicked="OnDeleteButtonClicked" />
+        </Grid>
+
+        <!-- Lista de ingrediente -->
+        <ListView x:Name="listView"
+          ItemsSource="{Binding Ingredients}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="10">
+                            <Label Text="{Binding Name}" VerticalOptions="Center" />
+                            <Button Text="Add to Recipe"
+                            Clicked="OnAddToRecipeClicked"
+                            CommandParameter="{Binding .}" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+    </StackLayout>
+</ContentPage>

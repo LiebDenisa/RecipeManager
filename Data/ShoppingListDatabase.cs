@@ -16,8 +16,12 @@ namespace RecipeManager.Data
         {
             _database = new SQLiteAsyncConnection(dbPath);
             _database.CreateTableAsync<ShopList>().Wait();
+            _database.CreateTableAsync<Ingredient>().Wait();
+            _database.CreateTableAsync<Recipe>().Wait();
+            _database.CreateTableAsync<RecipeIngredient>().Wait();
         }
 
+        // Metode pentru ShopList
         public Task<List<ShopList>> GetShopListsAsync()
         {
             return _database.Table<ShopList>().ToListAsync();
@@ -46,5 +50,56 @@ namespace RecipeManager.Data
         {
             return _database.DeleteAsync(slist);
         }
+
+        public Task<List<Ingredient>> GetIngredientsAsync()
+        {
+            return _database.Table<Ingredient>().ToListAsync();
+        }
+
+        public Task<int> SaveIngredientAsync(Ingredient ingredient)
+        {
+            if (ingredient.ID != 0)
+            {
+                return _database.UpdateAsync(ingredient);
+            }
+            else
+            {
+                return _database.InsertAsync(ingredient);
+            }
+        }
+
+        public Task<int> DeleteIngredientAsync(Ingredient ingredient)
+        {
+            return _database.DeleteAsync(ingredient);
+        }
+        public Task<int> SaveRecipeIngredientAsync(RecipeIngredient recipeIngredient)
+        {
+            return _database.InsertAsync(recipeIngredient);
+        }
+
+
+        public Task<int> SaveRecipeAsync(Recipe recipe)
+        {
+            if (recipe.ID != 0)
+            {
+                return _database.UpdateAsync(recipe);
+            }
+            else
+            {
+                return _database.InsertAsync(recipe);
+            }
+        }
+
+        public Task<List<Ingredient>> GetIngredientsForRecipeAsync(int recipeID)
+        {
+            return _database.QueryAsync<Ingredient>(
+                "SELECT Ingredient.* FROM Ingredient " +
+                "INNER JOIN RecipeIngredient ON Ingredient.ID = RecipeIngredient.IngredientID " +
+                "WHERE RecipeIngredient.RecipeID = ?",
+                recipeID);
+        }
+            
+
+
     }
 }

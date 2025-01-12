@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeManager.RecipePage"
+             Title="Recipe Page">
+
+    <StackLayout Padding="20">
+        <!-- Numele rețetei -->
+        <Editor x:Name="recipeNameEditor"
+                Placeholder="Enter the recipe name"
+                Text="{Binding RecipeName}"
+                HeightRequest="50" />
+
+        <!-- Lista de ingrediente -->
+        <ListView x:Name="ingredientListView"
+                  ItemsSource="{Binding Ingredients}"
+                  Margin="0,20,0,0">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Name}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <!-- Buton pentru navigare către IngredientPage -->
+        <Button x:Name="addIngredientButton"
+                Text="Add Ingredient"
+                Clicked="OnAddIngredientClicked" />
+
+        <!-- Descrierea rețetei -->
+        <Editor x:Name="descriptionEditor"
+                Placeholder="Enter the description of the recipe"
+                Text="{Binding Description}"
+                HeightRequest="50" />
+
+        <!-- Buton pentru salvarea rețetei -->
+        <Button Text="Save Recipe"
+                Clicked="OnSaveRecipeClicked" />
+    </StackLayout>
+</ContentPage>

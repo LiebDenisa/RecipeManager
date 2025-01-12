@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SQLite;
+﻿using SQLite;
 using SQLiteNetExtensions.Attributes;
-
 
 namespace RecipeManager.Models
 {
@@ -14,10 +8,17 @@ namespace RecipeManager.Models
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
 
-        [ForeignKey(typeof(ShopList))]
+        [ForeignKey(typeof(Recipe))]
         public int RecipeID { get; set; }
 
         [ForeignKey(typeof(Ingredient))]
         public int IngredientID { get; set; }
+
+        // Navigare inversă
+        [ManyToOne]
+        public Recipe Recipe { get; set; }
+
+        [ManyToOne]
+        public Ingredient Ingredient { get; set; }
     }
 }
