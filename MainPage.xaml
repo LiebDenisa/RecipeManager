@@ -12,6 +12,8 @@
         <Button Text="Click me"
         x:Name="CounterBtn"
         Clicked="OnCounterClicked" />
+        <Button Text="Go to Shopping Lists"
+                Clicked="OnGoToListEntryPageClicked" />
     </VerticalStackLayout>
 
 </ContentPage>

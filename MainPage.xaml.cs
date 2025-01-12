@@ -20,6 +20,10 @@
 
             SemanticScreenReader.Announce(CounterBtn.Text);
         }
+        private async void OnGoToListEntryPageClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ListEntryPage());
+        }
     }
 
 }
