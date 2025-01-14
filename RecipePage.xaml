@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RecipeManager.RecipePage"
@@ -10,19 +11,45 @@
                 Text="{Binding Name}"
                 HeightRequest="50" />
 
+        <!-- Reminder Time Picker -->
+        <Label Text="Set a Reminder Time" />
+        <TimePicker x:Name="reminderTimePicker" />
+
+        <!-- Button to Set Reminder -->
+        <Button Text="Set Reminder"
+                Clicked="OnSetReminderClicked" />
+
         <!-- Lista de ingrediente -->
         <ListView x:Name="ingredientListView"
-          ItemsSource="{Binding Ingredients}"
-          IsVisible="{Binding Ingredients.Count, Converter={StaticResource ZeroToFalseConverter}}"
-          Margin="0,20,0,0">
+                  ItemsSource="{Binding Ingredients}"
+                  Margin="0,20,0,0">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Name}" />
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="10">
+                            <!-- Numele ingredientului -->
+                            <Label Text="{Binding Ingredient.Name}"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="StartAndExpand"
+                                   FontSize="18" />
+
+                            <!-- Buton de ștergere ingredient -->
+                            <Button Text="Delete"
+                                    Clicked="OnDeleteIngredientClicked"
+                                    CommandParameter="{Binding .}"
+                                    BackgroundColor="Red"
+                                    TextColor="White"
+                                    FontSize="16"
+                                    Padding="10"
+                                    WidthRequest="80"
+                                    HeightRequest="40"
+                                    CornerRadius="10"
+                                    HorizontalOptions="End" />
+                        </StackLayout>
+                    </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
-
 
         <!-- Buton pentru navigare către IngredientPage -->
         <Button x:Name="addIngredientButton"

@@ -38,7 +38,6 @@ namespace RecipeManager
             }
         }
 
-
         async void OnDeleteButtonClicked(object sender, EventArgs e)
         {
             var ingredient = listView.SelectedItem as Ingredient;
@@ -48,6 +47,7 @@ namespace RecipeManager
                 listView.ItemsSource = await App.Database.GetIngredientsAsync();
             }
         }
+
         async void OnAddToRecipeClicked(object sender, EventArgs e)
         {
             var button = sender as Button;
@@ -59,7 +59,5 @@ namespace RecipeManager
                 await Navigation.PopAsync();
             }
         }
-
-
     }
 }

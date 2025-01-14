@@ -23,6 +23,7 @@ namespace RecipeManager.Models
         {
             Ingredients = new List<RecipeIngredient>();
         }
+        public TimeSpan ReminderTime { get; set; }
 
     }
 }

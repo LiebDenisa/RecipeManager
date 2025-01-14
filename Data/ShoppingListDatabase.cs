@@ -20,12 +20,24 @@ namespace RecipeManager.Data
             _database.CreateTableAsync<Recipe>().Wait();
             _database.CreateTableAsync<RecipeIngredient>().Wait();
         }
-        public Task<List<Recipe>> GetRecipesAsync()
+
+        public async Task<List<Recipe>> GetRecipesAsync()
         {
-            return _database.Table<Recipe>().ToListAsync();
+            var recipes = await _database.Table<Recipe>().ToListAsync();
+
+            // Convert ReminderTime from string to TimeSpan
+            foreach (var recipe in recipes)
+            {
+                if (!string.IsNullOrEmpty(recipe.ReminderTime.ToString()))
+                {
+                    recipe.ReminderTime = TimeSpan.Parse(recipe.ReminderTime.ToString());
+                }
+            }
+
+            return recipes;
         }
 
-        // Metode pentru ShopList
+
         public Task<List<ShopList>> GetShopListsAsync()
         {
             return _database.Table<ShopList>().ToListAsync();
@@ -76,11 +88,11 @@ namespace RecipeManager.Data
         {
             return _database.DeleteAsync(ingredient);
         }
+
         public Task<int> SaveRecipeIngredientAsync(RecipeIngredient recipeIngredient)
         {
             return _database.InsertAsync(recipeIngredient);
         }
-
 
         public async Task<int> SaveRecipeAsync(Recipe recipe)
         {
@@ -94,7 +106,7 @@ namespace RecipeManager.Data
                 recipe.ID = await _database.ExecuteScalarAsync<int>("SELECT last_insert_rowid()");
             }
 
-            // Salvează ingredientele asociate rețetei
+            // Save associated ingredients
             if (recipe.Ingredients != null)
             {
                 foreach (var ingredient in recipe.Ingredients)
@@ -125,19 +137,25 @@ namespace RecipeManager.Data
 
             return result;
         }
+
         public async Task<int> DeleteRecipeAsync(Recipe recipe)
         {
-            // Șterge ingredientele asociate rețetei
+            // Delete associated ingredients
             await _database.ExecuteAsync("DELETE FROM RecipeIngredient WHERE RecipeID = ?", recipe.ID);
 
-            // Șterge rețeta
+            // Delete the recipe
             return await _database.DeleteAsync(recipe);
         }
 
+        public Task<int> DeleteRecipeIngredientAsync(RecipeIngredient recipeIngredient)
+        {
+            return _database.DeleteAsync(recipeIngredient);
+        }
 
-
-
-
-
+        // Get recipes with reminders
+        public async Task<List<Recipe>> GetRecipesWithReminderAsync()
+        {
+            return await _database.QueryAsync<Recipe>("SELECT * FROM Recipe WHERE ReminderTime IS NOT NULL");
+        }
     }
 }

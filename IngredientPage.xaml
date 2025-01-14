@@ -19,37 +19,36 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!-- Buton pentru salvarea ingredientului -->
+            <!-- Button to save the ingredient -->
             <Button Text="Save Ingredient"
                     Clicked="OnSaveIngredientClicked" />
 
-            <!-- Buton pentru ștergerea ingredientului -->
+            <!-- Button to delete the ingredient -->
             <Button Grid.Column="1" Text="Delete Ingredient"
                     Clicked="OnDeleteButtonClicked" />
         </Grid>
 
-        <!-- Lista de ingrediente -->
+        <!-- List of ingredients -->
         <ListView x:Name="listView"
-          ItemsSource="{Binding Ingredients}">
+                  ItemsSource="{Binding Ingredients}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Orientation="Horizontal" Padding="10">
                             <Label Text="{Binding Name}" VerticalOptions="Center" />
                             <Button Text="Add"
-                            Clicked="OnAddToRecipeClicked"
-                            CommandParameter="{Binding .}"
+                                    Clicked="OnAddToRecipeClicked"
+                                    CommandParameter="{Binding .}"
                                     TextColor="White"
                                     FontSize="16"
                                     Padding="10"
                                     WidthRequest="100"
                                     HeightRequest="40"
-                                    CornerRadius="10"/>
+                                    CornerRadius="10" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
     </StackLayout>
 </ContentPage>
