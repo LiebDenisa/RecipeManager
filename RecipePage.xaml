@@ -13,13 +13,15 @@
         <!-- Lista de ingrediente -->
         <ListView x:Name="ingredientListView"
           ItemsSource="{Binding Ingredients}"
+          IsVisible="{Binding Ingredients.Count, Converter={StaticResource ZeroToFalseConverter}}"
           Margin="0,20,0,0">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Ingredient.Name}" />
+                    <TextCell Text="{Binding Name}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
 
 
         <!-- Buton pentru navigare către IngredientPage -->

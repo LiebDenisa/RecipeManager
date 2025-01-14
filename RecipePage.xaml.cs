@@ -9,31 +9,52 @@ namespace RecipeManager
             InitializeComponent();
             BindingContext = recipe ?? new Recipe { Ingredients = new List<RecipeIngredient>() };
 
+            // Dacă rețeta nu are un ID, nu afișa lista de ingrediente
+            if (recipe.ID == 0)
+            {
+                ingredientListView.IsVisible = false;
+            }
+            else
+            {
+                ingredientListView.IsVisible = true;
+                LoadIngredientsForRecipe(recipe);
+            }
+
             MessagingCenter.Subscribe<IngredientPage, Ingredient>(this, "AddIngredientToRecipe", (sender, ingredient) =>
             {
                 var viewModel = (Recipe)BindingContext;
                 viewModel.Ingredients ??= new List<RecipeIngredient>();
 
-                // Creează un nou obiect RecipeIngredient și îl adaugă la listă
                 var recipeIngredient = new RecipeIngredient
                 {
+                    RecipeID = viewModel.ID,
                     IngredientID = ingredient.ID,
                     Ingredient = ingredient
                 };
 
                 viewModel.Ingredients.Add(recipeIngredient);
 
-                // Actualizează lista de ingrediente
                 ingredientListView.ItemsSource = null;
                 ingredientListView.ItemsSource = viewModel.Ingredients;
             });
-
-
         }
+
 
         public RecipePage() : this(new Recipe())
         {
         }
+
+        // Încarcă ingredientele pentru rețeta curentă
+        private async void LoadIngredientsForRecipe(Recipe recipe)
+        {
+            if (recipe != null && recipe.ID != 0)
+            {
+                recipe.Ingredients = await App.Database.GetIngredientsForRecipeAsync(recipe.ID);
+                ingredientListView.ItemsSource = recipe.Ingredients.Select(ri => ri.Ingredient).ToList();
+            }
+        }
+
+
 
         // Navighează către IngredientPage pentru a adăuga un ingredient
         async void OnAddIngredientClicked(object sender, EventArgs e)
@@ -46,15 +67,15 @@ namespace RecipeManager
         {
             var recipe = (Recipe)BindingContext;
 
+            // Salvează rețeta
             await App.Database.SaveRecipeAsync(recipe);
 
-            foreach (var ingredient in recipe.Ingredients)
-            {
-                await App.Database.SaveRecipeIngredientAsync(ingredient);
-            }
+            // Actualizează lista de ingrediente doar după ce rețeta este salvată
+            ingredientListView.ItemsSource = recipe.Ingredients.Select(ri => ri.Ingredient).ToList();
 
             await DisplayAlert("Success", "Recipe saved successfully!", "OK");
 
+            // Blochează câmpurile pentru editare
             ingredientListView.IsEnabled = false;
             addIngredientButton.IsEnabled = false;
             recipeNameEditor.IsEnabled = false;

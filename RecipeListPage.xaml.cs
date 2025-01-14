@@ -28,5 +28,22 @@ namespace RecipeManager
         {
             await Navigation.PushAsync(new RecipePage(new Recipe()));
         }
+        async void OnDeleteRecipeClicked(object sender, EventArgs e)
+        {
+            var button = sender as Button;
+            var recipeToDelete = button?.CommandParameter as Recipe;
+
+            if (recipeToDelete != null)
+            {
+                bool confirmDelete = await DisplayAlert("Confirm Delete", $"Are you sure you want to delete the recipe \"{recipeToDelete.Name}\"?", "Yes", "No");
+
+                if (confirmDelete)
+                {
+                    await App.Database.DeleteRecipeAsync(recipeToDelete);
+                    recipeListView.ItemsSource = await App.Database.GetRecipesAsync();
+                }
+            }
+        }
+
     }
 }

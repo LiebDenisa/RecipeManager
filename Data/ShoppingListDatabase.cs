@@ -82,24 +82,58 @@ namespace RecipeManager.Data
         }
 
 
-        public Task<int> SaveRecipeAsync(Recipe recipe)
+        public async Task<int> SaveRecipeAsync(Recipe recipe)
         {
             if (recipe.ID != 0)
             {
-                return _database.UpdateAsync(recipe);
+                await _database.UpdateAsync(recipe);
             }
             else
             {
-                return _database.InsertAsync(recipe);
+                await _database.InsertAsync(recipe);
+                recipe.ID = await _database.ExecuteScalarAsync<int>("SELECT last_insert_rowid()");
             }
+
+            // Salvează ingredientele asociate rețetei
+            if (recipe.Ingredients != null)
+            {
+                foreach (var ingredient in recipe.Ingredients)
+                {
+                    ingredient.RecipeID = recipe.ID;
+                    await SaveRecipeIngredientAsync(ingredient);
+                }
+            }
+
+            return recipe.ID;
         }
 
-        public Task<List<RecipeIngredient>> GetIngredientsForRecipeAsync(int recipeID)
+        public async Task<List<RecipeIngredient>> GetIngredientsForRecipeAsync(int recipeID)
         {
-            return _database.Table<RecipeIngredient>()
-                .Where(ri => ri.RecipeID == recipeID)
-                .ToListAsync();
+            var query = "SELECT ri.ID, ri.RecipeID, ri.IngredientID, i.Name " +
+                        "FROM RecipeIngredient ri " +
+                        "INNER JOIN Ingredient i ON ri.IngredientID = i.ID " +
+                        "WHERE ri.RecipeID = ?";
+
+            var result = await _database.QueryAsync<RecipeIngredient>(query, recipeID);
+
+            foreach (var recipeIngredient in result)
+            {
+                recipeIngredient.Ingredient = await _database.Table<Ingredient>()
+                                                              .Where(i => i.ID == recipeIngredient.IngredientID)
+                                                              .FirstOrDefaultAsync();
+            }
+
+            return result;
         }
+        public async Task<int> DeleteRecipeAsync(Recipe recipe)
+        {
+            // Șterge ingredientele asociate rețetei
+            await _database.ExecuteAsync("DELETE FROM RecipeIngredient WHERE RecipeID = ?", recipe.ID);
+
+            // Șterge rețeta
+            return await _database.DeleteAsync(recipe);
+        }
+
 
 
 

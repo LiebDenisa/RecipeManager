@@ -36,9 +36,15 @@
                     <ViewCell>
                         <StackLayout Orientation="Horizontal" Padding="10">
                             <Label Text="{Binding Name}" VerticalOptions="Center" />
-                            <Button Text="Add to Recipe"
+                            <Button Text="Add"
                             Clicked="OnAddToRecipeClicked"
-                            CommandParameter="{Binding .}" />
+                            CommandParameter="{Binding .}"
+                                    TextColor="White"
+                                    FontSize="16"
+                                    Padding="10"
+                                    WidthRequest="100"
+                                    HeightRequest="40"
+                                    CornerRadius="10"/>
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

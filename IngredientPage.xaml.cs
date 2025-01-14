@@ -23,13 +23,21 @@ namespace RecipeManager
             if (!string.IsNullOrWhiteSpace(ingredient.Name))
             {
                 await App.Database.SaveIngredientAsync(ingredient);
-                listView.ItemsSource = await App.Database.GetIngredientsAsync();
+
+                MessagingCenter.Send(this, "AddIngredientToRecipe", new RecipeIngredient
+                {
+                    IngredientID = ingredient.ID,
+                    Ingredient = ingredient
+                });
+
+                await Navigation.PopAsync();
             }
             else
             {
                 await DisplayAlert("Error", "Ingredient name cannot be empty.", "OK");
             }
         }
+
 
         async void OnDeleteButtonClicked(object sender, EventArgs e)
         {

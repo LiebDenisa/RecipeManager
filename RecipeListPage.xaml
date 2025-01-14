@@ -7,10 +7,32 @@
     <StackLayout Padding="20">
         <!-- Lista de rețete -->
         <ListView x:Name="recipeListView"
-                  ItemTapped="OnRecipeTapped">
+          ItemsSource="{Binding .}"
+          ItemTapped="OnRecipeTapped"
+          Margin="0,20,0,0">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Name}" />
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="10">
+                            <!-- Numele rețetei -->
+                            <Label Text="{Binding Name}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="StartAndExpand" />
+
+                            <!-- Buton de ștergere -->
+                            <Button Text="Delete"
+                            Clicked="OnDeleteRecipeClicked"
+                            CommandParameter="{Binding .}"
+                            BackgroundColor="Red"
+                            TextColor="White"
+                            FontSize="16"
+                            Padding="10"
+                            WidthRequest="100"
+                            HeightRequest="40"
+                            CornerRadius="10"
+                            HorizontalOptions="End" />
+                        </StackLayout>
+                    </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
