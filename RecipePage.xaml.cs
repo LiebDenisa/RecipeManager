@@ -44,13 +44,16 @@ namespace RecipeManager
         {
             if (recipe != null && recipe.ID != 0)
             {
-                var ingredients = await App.Database.GetIngredientsForRecipeAsync(recipe.ID);
-                recipe.Ingredients = new ObservableCollection<RecipeIngredient>(ingredients);
+                // Fetch the ingredients from the database
+                recipe.Ingredients = new ObservableCollection<RecipeIngredient>(
+                    await App.Database.GetIngredientsForRecipeAsync(recipe.ID)
+                );
 
                 // Bind the list to the ListView
                 ingredientListView.ItemsSource = recipe.Ingredients.Select(ri => ri.Ingredient).ToList();
             }
         }
+
         // Start a timer to check for reminders
         private void StartReminderTimer()
         {
@@ -133,16 +136,15 @@ namespace RecipeManager
             await App.Database.SaveRecipeAsync(recipe);
 
             // Refresh the ingredient list after saving
+            recipe.Ingredients = new ObservableCollection<RecipeIngredient>(
+                await App.Database.GetIngredientsForRecipeAsync(recipe.ID)
+            );
+
             ingredientListView.ItemsSource = recipe.Ingredients.Select(ri => ri.Ingredient).ToList();
 
             await DisplayAlert("Success", "Recipe saved successfully!", "OK");
-
-            // Disable editing fields
-            ingredientListView.IsEnabled = false;
-            addIngredientButton.IsEnabled = false;
-            recipeNameEditor.IsEnabled = false;
-            descriptionEditor.IsEnabled = false;
         }
+
 
         // Delete an ingredient from the recipe
         async void OnDeleteIngredientClicked(object sender, EventArgs e)

@@ -113,12 +113,23 @@ namespace RecipeManager.Data
                 foreach (var ingredient in recipe.Ingredients)
                 {
                     ingredient.RecipeID = recipe.ID;
-                    await SaveRecipeIngredientAsync(ingredient);
+
+                    // Check if the ingredient already exists in the RecipeIngredient table
+                    var existing = await _database.Table<RecipeIngredient>()
+                        .Where(ri => ri.RecipeID == recipe.ID && ri.IngredientID == ingredient.IngredientID)
+                        .FirstOrDefaultAsync();
+
+                    if (existing == null)
+                    {
+                        await SaveRecipeIngredientAsync(ingredient);
+                    }
                 }
             }
 
             return recipe.ID;
         }
+
+
 
         public async Task<List<RecipeIngredient>> GetIngredientsForRecipeAsync(int recipeID)
         {

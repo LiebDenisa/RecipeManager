@@ -21,30 +21,30 @@
 
         <!-- Lista de ingrediente -->
         <ListView x:Name="ingredientListView"
-                  ItemsSource="{Binding Ingredients}"
-                  Margin="0,20,0,0">
+          ItemsSource="{Binding Ingredients}"
+          Margin="0,20,0,0">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Orientation="Horizontal" Padding="10">
                             <!-- Numele ingredientului -->
                             <Label Text="{Binding Ingredient.Name}"
-                                   VerticalOptions="Center"
-                                   HorizontalOptions="StartAndExpand"
-                                   FontSize="18" />
+                           VerticalOptions="Center"
+                           HorizontalOptions="StartAndExpand"
+                           FontSize="18" />
 
                             <!-- Buton de ștergere ingredient -->
                             <Button Text="Delete"
-                                    Clicked="OnDeleteIngredientClicked"
-                                    CommandParameter="{Binding .}"
-                                    BackgroundColor="Red"
-                                    TextColor="White"
-                                    FontSize="16"
-                                    Padding="10"
-                                    WidthRequest="80"
-                                    HeightRequest="40"
-                                    CornerRadius="10"
-                                    HorizontalOptions="End" />
+                            Clicked="OnDeleteIngredientClicked"
+                            CommandParameter="{Binding .}"
+                            BackgroundColor="Red"
+                            TextColor="White"
+                            FontSize="16"
+                            Padding="10"
+                            WidthRequest="80"
+                            HeightRequest="40"
+                            CornerRadius="10"
+                            HorizontalOptions="End" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>
