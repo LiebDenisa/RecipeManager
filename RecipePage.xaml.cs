@@ -1,6 +1,8 @@
 ﻿using Plugin.LocalNotification;
 using RecipeManager.Models;
 using Microsoft.Maui.Dispatching;
+using System.Collections.ObjectModel;
+
 
 namespace RecipeManager
 {
@@ -8,22 +10,19 @@ namespace RecipeManager
     {
         private IDispatcherTimer _timer;
 
-        public RecipePage(Recipe recipe)
+         public RecipePage(Recipe recipe)
         {
             InitializeComponent();
-            BindingContext = recipe ?? new Recipe { Ingredients = new List<RecipeIngredient>() };
+            BindingContext = recipe ?? new Recipe { Ingredients = new ObservableCollection<RecipeIngredient>() };
 
             // Load ingredients for the recipe immediately when the page is opened
             LoadIngredientsForRecipe(recipe);
-
-            // Start the timer to check for reminders
-            StartReminderTimer();
 
             // Subscribe to ingredient addition
             MessagingCenter.Subscribe<IngredientPage, Ingredient>(this, "AddIngredientToRecipe", (sender, ingredient) =>
             {
                 var viewModel = (Recipe)BindingContext;
-                viewModel.Ingredients ??= new List<RecipeIngredient>();
+                viewModel.Ingredients ??= new ObservableCollection<RecipeIngredient>();
 
                 var recipeIngredient = new RecipeIngredient
                 {
@@ -33,9 +32,6 @@ namespace RecipeManager
                 };
 
                 viewModel.Ingredients.Add(recipeIngredient);
-
-                ingredientListView.ItemsSource = null;
-                ingredientListView.ItemsSource = viewModel.Ingredients;
             });
         }
 
@@ -48,14 +44,13 @@ namespace RecipeManager
         {
             if (recipe != null && recipe.ID != 0)
             {
-                // Fetch the ingredients from the database
-                recipe.Ingredients = await App.Database.GetIngredientsForRecipeAsync(recipe.ID);
+                var ingredients = await App.Database.GetIngredientsForRecipeAsync(recipe.ID);
+                recipe.Ingredients = new ObservableCollection<RecipeIngredient>(ingredients);
 
                 // Bind the list to the ListView
                 ingredientListView.ItemsSource = recipe.Ingredients.Select(ri => ri.Ingredient).ToList();
             }
         }
-
         // Start a timer to check for reminders
         private void StartReminderTimer()
         {
@@ -98,10 +93,30 @@ namespace RecipeManager
         {
             var recipe = (Recipe)BindingContext;
             var reminderTime = reminderTimePicker.Time;
-            recipe.ReminderTime = reminderTime;
+
+            // Schedule the notification
+            var notificationTime = DateTime.Today.Add(reminderTime);
+            if (notificationTime <= DateTime.Now)
+            {
+                notificationTime = notificationTime.AddDays(1);
+            }
+
+            var request = new NotificationRequest
+            {
+                NotificationId = recipe.ID,
+                Title = "Recipe Reminder",
+                Description = $"Don't forget to prepare the recipe: {recipe.Name}",
+                Schedule = new NotificationRequestSchedule
+                {
+                    NotifyTime = notificationTime
+                }
+            };
+
+            LocalNotificationCenter.Current.Show(request);
 
             await DisplayAlert("Reminder Set", $"You will be reminded at {reminderTime}.", "OK");
         }
+
 
         // Navigate to IngredientPage to add an ingredient
         async void OnAddIngredientClicked(object sender, EventArgs e)

@@ -1,4 +1,6 @@
 ﻿using RecipeManager.Models;
+using System.Collections.ObjectModel;
+
 
 namespace RecipeManager
 {
@@ -22,21 +24,23 @@ namespace RecipeManager
         }
 
 
+       
         async void OnSaveIngredientClicked(object sender, EventArgs e)
         {
             var ingredient = (Ingredient)BindingContext;
 
             if (!string.IsNullOrWhiteSpace(ingredient.Name))
             {
+                // Save the ingredient to the database
                 await App.Database.SaveIngredientAsync(ingredient);
 
-                MessagingCenter.Send(this, "AddIngredientToRecipe", new RecipeIngredient
-                {
-                    IngredientID = ingredient.ID,
-                    Ingredient = ingredient
-                });
+                // Refresh the list immediately after saving
+                listView.ItemsSource = await App.Database.GetIngredientsAsync();
 
-                await Navigation.PopAsync();
+                // Reset the BindingContext to a new Ingredient
+                BindingContext = new Ingredient();
+
+                await DisplayAlert("Success", "Ingredient saved successfully!", "OK");
             }
             else
             {
@@ -54,10 +58,11 @@ namespace RecipeManager
             }
         }
 
+        
         async void OnAddToRecipeClicked(object sender, EventArgs e)
         {
             var button = sender as Button;
-            var selectedIngredient = button.CommandParameter as Ingredient;
+            var selectedIngredient = button?.CommandParameter as Ingredient;
 
             if (selectedIngredient != null)
             {
@@ -65,5 +70,8 @@ namespace RecipeManager
                 await Navigation.PopAsync();
             }
         }
+
+
+
     }
 }

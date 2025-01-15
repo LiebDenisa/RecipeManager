@@ -1,6 +1,6 @@
 ﻿using SQLite;
 using SQLiteNetExtensions.Attributes;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace RecipeManager.Models
 {
@@ -14,16 +14,16 @@ namespace RecipeManager.Models
 
         public string Description { get; set; }
 
-        // Relația cu Ingredient
+        // Use ObservableCollection for automatic UI updates
         [OneToMany(CascadeOperations = CascadeOperation.All)]
-        public List<RecipeIngredient> Ingredients { get; set; }
+        public ObservableCollection<RecipeIngredient> Ingredients { get; set; }
 
-        // Constructor pentru inițializarea listei
+        // Constructor to initialize the collection
         public Recipe()
         {
-            Ingredients = new List<RecipeIngredient>();
+            Ingredients = new ObservableCollection<RecipeIngredient>();
         }
-        public TimeSpan ReminderTime { get; set; }
 
+        public TimeSpan ReminderTime { get; set; }
     }
 }
