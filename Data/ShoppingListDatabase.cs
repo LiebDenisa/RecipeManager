@@ -19,6 +19,7 @@ namespace RecipeManager.Data
             _database.CreateTableAsync<Ingredient>().Wait();
             _database.CreateTableAsync<Recipe>().Wait();
             _database.CreateTableAsync<RecipeIngredient>().Wait();
+            _database.CreateTableAsync<User>().Wait();
         }
 
         public async Task<List<Recipe>> GetRecipesAsync()
@@ -157,5 +158,58 @@ namespace RecipeManager.Data
         {
             return await _database.QueryAsync<Recipe>("SELECT * FROM Recipe WHERE ReminderTime IS NOT NULL");
         }
+        // Register a new user
+        public async Task<bool> RegisterUserAsync(string username, string password)
+        {
+            // Check if the username already exists
+            var existingUser = await _database.Table<User>().FirstOrDefaultAsync(u => u.Username == username);
+            if (existingUser != null)
+            {
+                return false; // Username already taken
+            }
+
+            // Hash the password before storing it
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+
+            // Create a new user and insert it into the database
+            var newUser = new User
+            {
+                Username = username,
+                Password = hashedPassword
+            };
+
+            await _database.InsertAsync(newUser);
+            return true;
+        }
+
+        // Login an existing user
+        public async Task<User> LoginUserAsync(string username, string password)
+        {
+            // Find the user by username
+            var user = await _database.Table<User>().FirstOrDefaultAsync(u => u.Username == username);
+
+            // If user is found, verify the password
+            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
+            {
+                return user;
+            }
+
+            // If the credentials are incorrect, return null
+            return null;
+        }
+
+        // Check if a user is logged in
+        public async Task<bool> IsUserLoggedInAsync()
+        {
+            var user = await _database.Table<User>().FirstOrDefaultAsync();
+            return user != null;
+        }
+
+        // Logout the user
+        public Task<int> LogoutUserAsync()
+        {
+            return _database.ExecuteAsync("DELETE FROM User");
+        }
+
     }
 }

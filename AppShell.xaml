@@ -6,30 +6,20 @@
     xmlns:local="clr-namespace:RecipeManager"
     Shell.FlyoutBehavior="Disabled">
 
+    <!-- Tabs for Navigation -->
     <TabBar>
-        <!-- Pagina Home -->
-        <ShellContent Title="Home"
-                      ContentTemplate="{DataTemplate local:MainPage}" />
-
-        <!-- Pagina About -->
-        <ShellContent Title="About"
-                      ContentTemplate="{DataTemplate local:AboutPage}" />
-
-        <!-- Pagina Shopping Lists -->
-        <ShellContent Title="Shopping Lists"
-                      ContentTemplate="{DataTemplate local:ListEntryPage}" />
-
-        <!-- Pagina Recipes -->
-        <Tab Title="Recipes"
-             Icon="recipes.png">
-            <ShellContent ContentTemplate="{DataTemplate local:RecipeListPage}" />
-        </Tab>
-
-        <!-- Noua pagină Ingredients -->
-        <Tab Title="Ingredients"
-             Icon="ingredients.png">
-            <ShellContent ContentTemplate="{DataTemplate local:IngredientPage}" />
-        </Tab>
-
+        <ShellContent Title="Home" ContentTemplate="{DataTemplate local:MainPage}" />
+        <ShellContent Title="About" ContentTemplate="{DataTemplate local:AboutPage}" />
+        <ShellContent Title="Shopping Lists" ContentTemplate="{DataTemplate local:ListEntryPage}" />
+        <ShellContent Title="Recipes" ContentTemplate="{DataTemplate local:RecipeListPage}" />
+        <ShellContent Title="Ingredients" ContentTemplate="{DataTemplate local:IngredientPage}" />
     </TabBar>
+
+    <!-- Logout Toolbar Item -->
+    <Shell.ToolbarItems>
+        <ToolbarItem Text="Logout"
+                     IconImageSource="logout.png"
+                     Clicked="OnLogoutButtonClicked" />
+    </Shell.ToolbarItems>
+
 </Shell>

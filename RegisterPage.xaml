@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeManager.RegisterPage"
+             Title="Register">
+
+    <StackLayout Padding="20">
+        <Label Text="Register" FontSize="24" HorizontalOptions="Center" />
+
+        <Entry x:Name="usernameEntry" Placeholder="Enter username" />
+        <Entry x:Name="passwordEntry" Placeholder="Enter password" IsPassword="True" />
+
+        <Button Text="Register" Clicked="OnRegisterButtonClicked" />
+    </StackLayout>
+</ContentPage>

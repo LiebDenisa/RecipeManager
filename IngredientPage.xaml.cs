@@ -9,12 +9,18 @@ namespace RecipeManager
             InitializeComponent();
             BindingContext = new Ingredient();
         }
-
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+
+            var isUserLoggedIn = await App.Database.IsUserLoggedInAsync();
+            if (!isUserLoggedIn)
+            {
+                await Navigation.PushAsync(new LoginPage());
+            }
             listView.ItemsSource = await App.Database.GetIngredientsAsync();
         }
+
 
         async void OnSaveIngredientClicked(object sender, EventArgs e)
         {

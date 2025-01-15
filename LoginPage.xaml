@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeManager.LoginPage"
+             Title="Login">
+
+    <StackLayout Padding="20" VerticalOptions="CenterAndExpand">
+
+        <!-- Welcome Text -->
+        <Label Text="Welcome to Recipe Manager!" 
+               FontSize="32" 
+               HorizontalOptions="Center" />
+
+        <!-- Username Entry -->
+        <Entry x:Name="usernameEntry" 
+               Placeholder="Enter your username" />
+
+        <!-- Password Entry -->
+        <Entry x:Name="passwordEntry" 
+               Placeholder="Enter your password" 
+               IsPassword="True" />
+
+        <!-- Login Button -->
+        <Button Text="Login" 
+                Clicked="OnLoginButtonClicked" />
+
+        <!-- Register Button -->
+        <Button Text="Don't have an account? Register here"
+                BackgroundColor="Transparent"
+                TextColor="Blue"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                Clicked="OnRegisterButtonClicked" />
+    </StackLayout>
+
+</ContentPage>

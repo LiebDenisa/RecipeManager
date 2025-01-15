@@ -2,28 +2,38 @@
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
+            CheckLoginStatus();
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private async void CheckLoginStatus()
         {
-            count++;
+            var isUserLoggedIn = await App.Database.IsUserLoggedInAsync();
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
+            if (isUserLoggedIn)
+            {
+                LoginButton.IsVisible = false;
+                ShoppingListButton.IsVisible = true;
+            }
             else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            {
+                LoginButton.IsVisible = true;
+                ShoppingListButton.IsVisible = false;
+            }
         }
+
+        // Navigate to LoginPage when Login button is clicked
+        private async void OnLoginButtonClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new LoginPage());
+        }
+
+        // Navigate to the Shopping Lists page
         private async void OnGoToListEntryPageClicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new ListEntryPage());
         }
     }
-
 }

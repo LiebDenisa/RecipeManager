@@ -1,19 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="RecipeManager.MainPage">
+             x:Class="RecipeManager.MainPage"
+             Title="Home">
 
     <VerticalStackLayout Spacing="20" Padding="20">
+        <!-- Image -->
         <Image Source="turtle.jpeg" HeightRequest="120" />
+
+        <!-- Welcome Message -->
         <Label Text="Welcome to Recipe Manager!"
                FontSize="24"
                FontAttributes="Bold"
                HorizontalOptions="Center" />
-        <Button Text="Click me"
-        x:Name="CounterBtn"
-        Clicked="OnCounterClicked" />
+
+        <!-- Login Button -->
+        <Button Text="Login"
+                x:Name="LoginButton"
+                FontSize="24"
+                BackgroundColor="DarkBlue"
+                TextColor="White"
+                CornerRadius="10"
+                Padding="20"
+                WidthRequest="200"
+                HorizontalOptions="Center"
+                Clicked="OnLoginButtonClicked" />
+
+        <!-- Buttons that should only be available after login -->
         <Button Text="Go to Shopping Lists"
-                Clicked="OnGoToListEntryPageClicked" />
+                Clicked="OnGoToListEntryPageClicked"
+                IsVisible="False"
+                x:Name="ShoppingListButton" />
     </VerticalStackLayout>
 
 </ContentPage>
